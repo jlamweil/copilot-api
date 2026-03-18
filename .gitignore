@@ -12,3 +12,6 @@ node_modules/
 
 # build output
 dist/
+
+# copilot auth data (contains tokens)
+copilot-data/

@@ -30,6 +30,67 @@ interface RunServerOptions {
   claudeCode: boolean
   showToken: boolean
   proxyEnv: boolean
+  defaultModel?: string
+  smallModel?: string
+}
+
+async function selectModel(options: {
+  defaultModel: string | undefined
+  models: Array<{ id: string }>
+  promptText: string
+}): Promise<string> {
+  if (!options.defaultModel) {
+    return consola.prompt(options.promptText, {
+      type: "select",
+      options: options.models.map((model) => model.id),
+    })
+  }
+
+  // Validate that the selected model exists
+  const modelExists = options.models.some(
+    (model) => model.id === options.defaultModel,
+  )
+  if (!modelExists) {
+    consola.error(
+      `Model "${options.defaultModel}" not found in available models`,
+    )
+    consola.info(
+      `Available models: ${options.models.map((m) => m.id).join(", ")}`,
+    )
+    process.exit(1)
+  }
+  consola.info(`Using model: ${options.defaultModel}`)
+  return options.defaultModel
+}
+
+function setupClaudeCode(
+  selectedModel: string,
+  selectedSmallModel: string,
+  serverUrl: string,
+): void {
+  const command = generateEnvScript(
+    {
+      ANTHROPIC_BASE_URL: serverUrl,
+      ANTHROPIC_AUTH_TOKEN: "dummy",
+      ANTHROPIC_MODEL: selectedModel,
+      ANTHROPIC_DEFAULT_SONNET_MODEL: selectedModel,
+      ANTHROPIC_SMALL_FAST_MODEL: selectedSmallModel,
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: selectedSmallModel,
+      DISABLE_NON_ESSENTIAL_MODEL_CALLS: "1",
+      CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1",
+    },
+    "claude",
+  )
+
+  try {
+    clipboard.writeSync(command)
+    consola.success("Copied Claude Code command to clipboard!")
+  } catch {
+    consola.warn(
+      "Failed to copy to clipboard. Here is the Claude Code command:",
+    )
+    consola.log(command)
+  }
 }
 
 export async function runServer(options: RunServerOptions): Promise<void> {
@@ -80,45 +141,24 @@ export async function runServer(options: RunServerOptions): Promise<void> {
   if (options.claudeCode) {
     invariant(state.models, "Models should be loaded by now")
 
-    const selectedModel = await consola.prompt(
-      "Select a model to use with Claude Code",
-      {
-        type: "select",
-        options: state.models.data.map((model) => model.id),
-      },
-    )
+    const defaultModel =
+      options.defaultModel || process.env.COPILOT_DEFAULT_MODEL
+    const defaultSmallModel =
+      options.smallModel || process.env.COPILOT_SMALL_MODEL
 
-    const selectedSmallModel = await consola.prompt(
-      "Select a small model to use with Claude Code",
-      {
-        type: "select",
-        options: state.models.data.map((model) => model.id),
-      },
-    )
+    const selectedModel = await selectModel({
+      defaultModel,
+      models: state.models.data,
+      promptText: "Select a model to use with Claude Code",
+    })
 
-    const command = generateEnvScript(
-      {
-        ANTHROPIC_BASE_URL: serverUrl,
-        ANTHROPIC_AUTH_TOKEN: "dummy",
-        ANTHROPIC_MODEL: selectedModel,
-        ANTHROPIC_DEFAULT_SONNET_MODEL: selectedModel,
-        ANTHROPIC_SMALL_FAST_MODEL: selectedSmallModel,
-        ANTHROPIC_DEFAULT_HAIKU_MODEL: selectedSmallModel,
-        DISABLE_NON_ESSENTIAL_MODEL_CALLS: "1",
-        CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1",
-      },
-      "claude",
-    )
+    const selectedSmallModel = await selectModel({
+      defaultModel: defaultSmallModel,
+      models: state.models.data,
+      promptText: "Select a small model to use with Claude Code",
+    })
 
-    try {
-      clipboard.writeSync(command)
-      consola.success("Copied Claude Code command to clipboard!")
-    } catch {
-      consola.warn(
-        "Failed to copy to clipboard. Here is the Claude Code command:",
-      )
-      consola.log(command)
-    }
+    setupClaudeCode(selectedModel, selectedSmallModel, serverUrl)
   }
 
   consola.box(
@@ -200,6 +240,16 @@ export const start = defineCommand({
       default: false,
       description: "Initialize proxy from environment variables",
     },
+    "default-model": {
+      type: "string",
+      description:
+        "Default model to use with Claude Code (bypasses interactive selection)",
+    },
+    "small-model": {
+      type: "string",
+      description:
+        "Small/fast model to use with Claude Code (bypasses interactive selection)",
+    },
   },
   run({ args }) {
     const rateLimitRaw = args["rate-limit"]
@@ -218,6 +268,8 @@ export const start = defineCommand({
       claudeCode: args["claude-code"],
       showToken: args["show-token"],
       proxyEnv: args["proxy-env"],
+      defaultModel: args["default-model"],
+      smallModel: args["small-model"],
     })
   },
 })

@@ -41,7 +41,7 @@ Compared with routing everything through plain Chat Completions compatibility, t
 - **Claude Native Beta Support**: On the Messages API path, supports Anthropic-native capabilities such as `interleaved-thinking`, `advanced-tool-use`, and `context-management`, which are difficult or unavailable through plain Chat Completions compatibility.
 - **Subagent Marker Integration**: Optional Claude Code and opencode plugins can inject `__SUBAGENT_MARKER__...` and propagate `x-session-id` so subagent traffic keeps the correct root session and agent/user semantics.
 - **OpenCode via `@ai-sdk/anthropic`**: Point OpenCode at this proxy as an Anthropic provider so Anthropic Messages semantics, premium-request optimizations, and Claude-native behavior are preserved end to end.
-- **Claude Code Integration**: Easily configure and launch [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) to use Copilot as its backend with a simple command-line flag (`--claude-code`).
+- **Claude Code Integration**: Easily configure and launch [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) to use Copilot as its backend with a simple command-line flag (`--claude-code`). Supports non-interactive model selection for Docker automation.
 - **Usage Dashboard**: A web-based dashboard to monitor your Copilot API usage, view quotas, and see detailed statistics.
 - **Rate Limit Control**: Manage API usage with rate-limiting options (`--rate-limit`) and a waiting mechanism (`--wait`) to prevent errors from rapid requests.
 - **Manual Request Approval**: Manually approve or deny each API request for fine-grained control over usage (`--manual`).
@@ -108,6 +108,27 @@ To install dependencies, run:
 ```sh
 bun install
 ```
+
+## 🚀 Quick Setup for Claude Code CLI
+
+For a streamlined setup to use Claude Code CLI with GitHub Copilot backend, use the automated deployment script:
+
+```bash
+# One-command setup (builds, authenticates, and starts server)
+./deploy.sh
+```
+
+Or follow the manual steps in [SETUP-CLAUDE-CODE.md](SETUP-CLAUDE-CODE.md) for detailed instructions.
+
+**Quick start for new PCs:**
+1. Clone repo and run `./deploy.sh`
+2. Use Claude CLI: `./claude-with-copilot.sh`
+
+This setup enables:
+- ✅ Claude Code CLI using GitHub Copilot models (no Anthropic API key needed)
+- ✅ Non-interactive Docker deployment for automation  
+- ✅ Access to latest models (Claude 4.6, GPT-5.x, etc.)
+- ✅ Usage monitoring dashboard
 
 ## Using with Docker
 
