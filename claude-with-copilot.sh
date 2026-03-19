@@ -12,4 +12,8 @@ export DISABLE_NON_ESSENTIAL_MODEL_CALLS=1
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 
 # Start Claude CLI
-claude "$@"
+if [ $# -gt 0 ]; then
+	claude "$@"
+else
+	claude
+fi

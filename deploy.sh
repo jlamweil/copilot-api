@@ -42,6 +42,18 @@ if ! command -v bun &> /dev/null; then
 fi
 print_status "Bun found"
 
+if command -v node &> /dev/null; then
+    NODE_MAJOR=$(node -v | sed -E 's/^v([0-9]+).*/\1/')
+    if [ "$NODE_MAJOR" -lt 20 ]; then
+        print_warning "Node.js $(node -v) detected; package.json requires Node >=20."
+        print_warning "Build uses Bun, but older Node may break other Node-based tooling."
+    else
+        print_status "Node $(node -v) is compatible"
+    fi
+else
+    print_warning "Node.js not found; this is okay for Bun-based build, but optional tools may expect Node >=20."
+fi
+
 if [ ! -f ~/.local/bin/claude ]; then
     print_warning "Claude CLI not found at ~/.local/bin/claude"
     echo "Please install Claude Code CLI first"

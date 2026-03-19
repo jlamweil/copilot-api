@@ -26,7 +26,54 @@
 
 ---
 
-## Project Overview
+## 🚀 Easy Setup (New PC)
+
+Follow these steps for a fast, reliable Claude Code CLI + GitHub Copilot backend setup:
+
+### 1. Prerequisites
+ - Docker (install from https://docs.docker.com/get-docker/)
+ - Bun (install from https://bun.sh/)
+ - Claude Code CLI (`~/.local/bin/claude`) — see [Anthropic docs](https://docs.anthropic.com/en/docs/claude-code/overview)
+ - GitHub account with Copilot access
+
+### 2. Clone and Deploy
+```bash
+git clone <your-repo-url>
+cd copilot-api
+./deploy.sh
+```
+> The deploy script checks Docker, Bun, and Node versions, builds everything, authenticates with GitHub, and starts the server.
+
+### 3. Use Claude CLI
+```bash
+# Option A: Use the wrapper script (recommended)
+chmod +x claude-with-copilot.sh
+./claude-with-copilot.sh
+
+# Option B: Manual environment setup
+export ANTHROPIC_BASE_URL=http://localhost:4141
+export ANTHROPIC_AUTH_TOKEN=dummy
+export ANTHROPIC_MODEL=claude-opus-4.6
+export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-opus-4.6
+export ANTHROPIC_SMALL_FAST_MODEL=claude-opus-4.6-fast
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-opus-4.6-fast
+export DISABLE_NON_ESSENTIAL_MODEL_CALLS=1
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+claude
+```
+
+### 4. Monitor Usage
+ - Visit: [http://localhost:4141/usage-viewer?endpoint=http://localhost:4141/usage](http://localhost:4141/usage-viewer?endpoint=http://localhost:4141/usage)
+
+### 5. Stop Server
+ - To stop: `docker stop <container-id>` (shown at end of deploy)
+
+### Troubleshooting
+ - If Node.js is below v20, deploy will warn but still proceed (build uses Bun).
+ - If Claude CLI is missing, deploy will prompt you to install it.
+ - For advanced options, see [SETUP-CLAUDE-CODE.md](SETUP-CLAUDE-CODE.md).
+
+---
 
 A reverse-engineered proxy for the GitHub Copilot API that exposes it as an OpenAI and Anthropic compatible service. This allows you to use GitHub Copilot with any tool that supports the OpenAI Chat Completions API or the Anthropic Messages API, including to power [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview).
 

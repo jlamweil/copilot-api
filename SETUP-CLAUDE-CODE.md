@@ -8,36 +8,26 @@ This guide helps you set up Claude Code CLI to use GitHub Copilot's models throu
 2. **Claude Code CLI** installed (`~/.local/bin/claude`)
 3. **GitHub account** with Copilot access
 
+
 ## Quick Setup (New PC)
 
-### 1. Clone and Build
+### 1. Prerequisites
+ - Docker (https://docs.docker.com/get-docker/)
+ - Bun (https://bun.sh/)
+ - Claude Code CLI (`~/.local/bin/claude`)
+ - GitHub account with Copilot access
+
+### 2. Clone and Deploy
 ```bash
 git clone <your-repo-url>
 cd copilot-api
-bun install
-bun run build
-docker build -t copilot-api .
+./deploy.sh
 ```
+> The deploy script checks Docker, Bun, and Node versions, builds everything, authenticates with GitHub, and starts the server.
 
-### 2. GitHub Authentication
+### 3. Use Claude CLI
 ```bash
-# First time setup - authenticate with GitHub
-docker run --rm -it -v "$PWD/copilot-data:/root/.local/share/copilot-api" copilot-api --auth
-```
-
-### 3. Start Copilot-API Server (Non-Interactive)
-```bash
-# Start server with pre-selected models (no prompts!)
-docker run --rm -d -p 4141:4141 \
-  -v "$PWD/copilot-data:/root/.local/share/copilot-api" \
-  -e COPILOT_DEFAULT_MODEL="claude-opus-4.6" \
-  -e COPILOT_SMALL_MODEL="claude-opus-4.6-fast" \
-  copilot-api start --claude-code
-```
-
-### 4. Use Claude CLI
-```bash
-# Option A: Use the convenience script
+# Option A: Use the wrapper script (recommended)
 chmod +x claude-with-copilot.sh
 ./claude-with-copilot.sh
 
@@ -52,6 +42,18 @@ export DISABLE_NON_ESSENTIAL_MODEL_CALLS=1
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 claude
 ```
+
+### 4. Monitor Usage
+ - Visit: [http://localhost:4141/usage-viewer?endpoint=http://localhost:4141/usage](http://localhost:4141/usage-viewer?endpoint=http://localhost:4141/usage)
+
+### 5. Stop Server
+ - To stop: `docker stop <container-id>` (shown at end of deploy)
+
+### Troubleshooting
+ - If Node.js is below v20, deploy will warn but still proceed (build uses Bun).
+ - If Claude CLI is missing, deploy will prompt you to install it.
+
+---
 
 ## Available Models
 

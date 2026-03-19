@@ -24,7 +24,7 @@
     "pages"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "bunx --bun tsdown",
     "dev": "bun run --watch ./src/main.ts",
     "knip": "knip-bun",
     "lint": "eslint --cache",
