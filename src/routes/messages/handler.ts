@@ -83,13 +83,7 @@ export async function handleCompletion(c: Context) {
   const anthropicBeta = c.req.header("anthropic-beta")
   logger.debug("Anthropic Beta header:", anthropicBeta)
   const noTools = !anthropicPayload.tools || anthropicPayload.tools.length === 0
-  if (anthropicPayload.model === "auto") {
-    logger.info(
-      "Proxying request with model=auto for Copilot discount",
-      anthropicPayload,
-    )
-    // Pass through as-is, do not resolve to a real model
-  } else if (anthropicBeta && noTools && !isCompact) {
+  if (anthropicBeta && noTools && !isCompact) {
     anthropicPayload.model = getSmallModel()
   }
 
@@ -405,6 +399,7 @@ const handleWithMessagesApi = async (
 }
 
 const shouldUseResponsesApi = (selectedModel: Model | undefined): boolean => {
+  // ...existing code...
   return (
     selectedModel?.supported_endpoints?.includes(RESPONSES_ENDPOINT) ?? false
   )
@@ -415,6 +410,7 @@ const shouldUseMessagesApi = (selectedModel: Model | undefined): boolean => {
   if (!useMessagesApi) {
     return false
   }
+  // ...existing code...
   return (
     selectedModel?.supported_endpoints?.includes(MESSAGES_ENDPOINT) ?? false
   )

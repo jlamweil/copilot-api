@@ -25,20 +25,7 @@ modelRoutes.get("/", async (c) => {
         display_name: model.name,
       })) || []
 
-    // Always add 'auto' model if not present
-    if (!models.some((m) => m.id === "auto")) {
-      models.unshift({
-        id: "auto",
-        object: "model",
-        type: "model",
-        created: 0,
-        created_at: new Date(0).toISOString(),
-        owned_by: "copilot",
-        display_name: "Auto (Copilot Discounted)",
-        description:
-          "Let Copilot choose the best model automatically (discount applies).",
-      })
-    }
+    // ...existing code...
 
     return c.json({
       object: "list",

@@ -5,8 +5,7 @@ set -e
 echo "🚀 Setting up Claude Code CLI with GitHub Copilot backend..."
 
 # Configuration
-DEFAULT_MODEL="auto"
-SMALL_MODEL="auto"
+## Set your preferred discounted model IDs here
 PORT="4141"
 
 # Colors for output

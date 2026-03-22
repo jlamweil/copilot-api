@@ -71,7 +71,7 @@ You interact with the user through a terminal. You have 2 ways of communicating 
 - Tone of your updates MUST match your personality.`
 
 const defaultConfig: AppConfig = {
-  model: "auto",
+  model: "",
   auth: {
     apiKeys: [],
   },
@@ -82,7 +82,7 @@ const defaultConfig: AppConfig = {
     "gpt-5.4-mini": gpt5CommentaryPrompt,
     "gpt-5.4": gpt5CommentaryPrompt,
   },
-  smallModel: "auto",
+  smallModel: "",
   responsesApiContextManagementModels: [],
   modelReasoningEfforts: {
     "gpt-5-mini": "low",
