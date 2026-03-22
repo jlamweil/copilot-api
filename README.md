@@ -38,7 +38,7 @@ Follow these steps for a fast, reliable Claude Code CLI + GitHub Copilot backend
 
 ### 2. Clone and Deploy
 ```bash
-git clone <your-repo-url>
+git clone git@github.com:jlamweil/copilot-api.git
 cd copilot-api
 ./deploy.sh
 ```
