@@ -5,8 +5,8 @@ set -e
 echo "🚀 Setting up Claude Code CLI with GitHub Copilot backend..."
 
 # Configuration
-DEFAULT_MODEL="claude-opus-4.6"
-SMALL_MODEL="claude-opus-4.6-fast"
+DEFAULT_MODEL="auto"
+SMALL_MODEL="auto"
 PORT="4141"
 
 # Colors for output
@@ -88,7 +88,7 @@ fi
 
 # Start the server
 echo "🌟 Starting copilot-api server..."
-CONTAINER_ID=$(docker run --rm -d -p $PORT:4141 \
+CONTAINER_ID=$(docker run -d -p $PORT:4141 \
     -v "$PWD/copilot-data:/root/.local/share/copilot-api" \
     -e COPILOT_DEFAULT_MODEL="$DEFAULT_MODEL" \
     -e COPILOT_SMALL_MODEL="$SMALL_MODEL" \

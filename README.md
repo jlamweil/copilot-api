@@ -53,10 +53,10 @@ chmod +x claude-with-copilot.sh
 # Option B: Manual environment setup
 export ANTHROPIC_BASE_URL=http://localhost:4141
 export ANTHROPIC_AUTH_TOKEN=dummy
-export ANTHROPIC_MODEL=claude-opus-4.6
-export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-opus-4.6
-export ANTHROPIC_SMALL_FAST_MODEL=claude-opus-4.6-fast
-export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-opus-4.6-fast
+export ANTHROPIC_MODEL=auto
+export ANTHROPIC_DEFAULT_SONNET_MODEL=auto
+export ANTHROPIC_SMALL_FAST_MODEL=auto
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=auto
 export DISABLE_NON_ESSENTIAL_MODEL_CALLS=1
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 claude

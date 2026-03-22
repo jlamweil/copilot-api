@@ -83,7 +83,13 @@ export async function handleCompletion(c: Context) {
   const anthropicBeta = c.req.header("anthropic-beta")
   logger.debug("Anthropic Beta header:", anthropicBeta)
   const noTools = !anthropicPayload.tools || anthropicPayload.tools.length === 0
-  if (anthropicBeta && noTools && !isCompact) {
+  if (anthropicPayload.model === "auto") {
+    logger.info(
+      "Proxying request with model=auto for Copilot discount",
+      anthropicPayload,
+    )
+    // Pass through as-is, do not resolve to a real model
+  } else if (anthropicBeta && noTools && !isCompact) {
     anthropicPayload.model = getSmallModel()
   }
 

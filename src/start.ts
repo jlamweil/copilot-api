@@ -46,18 +46,20 @@ async function selectModel(options: {
     })
   }
 
-  // Validate that the selected model exists
-  const modelExists = options.models.some(
-    (model) => model.id === options.defaultModel,
-  )
-  if (!modelExists) {
-    consola.error(
-      `Model "${options.defaultModel}" not found in available models`,
+  // Allow 'auto' as a valid model even if not in the list
+  if (options.defaultModel !== "auto") {
+    const modelExists = options.models.some(
+      (model) => model.id === options.defaultModel,
     )
-    consola.info(
-      `Available models: ${options.models.map((m) => m.id).join(", ")}`,
-    )
-    process.exit(1)
+    if (!modelExists) {
+      consola.error(
+        `Model "${options.defaultModel}" not found in available models`,
+      )
+      consola.info(
+        `Available models: ${options.models.map((m) => m.id).join(", ")}`,
+      )
+      process.exit(1)
+    }
   }
   consola.info(`Using model: ${options.defaultModel}`)
   return options.defaultModel
