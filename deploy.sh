@@ -5,7 +5,8 @@ set -e
 echo "🚀 Setting up Claude Code CLI with GitHub Copilot backend..."
 
 # Configuration
-## Set your preferred discounted model IDs here
+DEFAULT_MODEL="gemini-3-1-pro"
+SMALL_MODEL="gpt-5.4-mini"
 PORT="4141"
 
 # Colors for output
